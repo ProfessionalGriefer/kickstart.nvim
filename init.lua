@@ -411,7 +411,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      -- NOE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -790,7 +790,14 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+
+    -- Autocomplete HTML Tags
+    dependencies = {
+      { 'windwp/nvim-ts-autotag' },
+    },
     opts = {
+      autotag = { enable = true },
+
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -858,6 +865,28 @@ require('lazy').setup({
     end,
   },
 
+  -- For Prettier
+  {
+    'dense-analysis/ale',
+    config = function()
+      -- Configuration goes here.
+      local g = vim.g
+
+      g.ale_ruby_rubocop_auto_correct_all = 1
+
+      g.ale_linters = {
+        ruby = { 'rubocop', 'ruby' },
+        lua = { 'lua_language_server' },
+        javascript = { 'eslint' },
+      }
+
+      g.ale_fixers = {
+        javascript = { 'prettier' },
+        css = { 'prettier' },
+      }
+    end,
+  },
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -906,3 +935,10 @@ require('lazy').setup({
 vim.cmd.colorscheme 'catppuccin'
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
+
+-- Mf not be using the mouse
+vim.keymap.set('', '<up>', '<nop>', { noremap = true })
+vim.keymap.set('', '<down>', '<nop>', { noremap = true })
+vim.keymap.set('i', '<up>', '<nop>', { noremap = true })
+vim.keymap.set('i', '<down>', '<nop>', { noremap = true })
+vim.opt.mouse = ''
